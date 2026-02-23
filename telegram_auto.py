@@ -41,7 +41,7 @@ def job_if_kst_2100():
 
     now_date = kst.strftime("%Y-%m-%d")
 
-    if kst.strftime("%H:%M") == "21:00" and last_sent_date != now_date:
+   if kst.strftime("%H:%M") in ["21:00", "21:01", "21:02", "21:05"] and last_sent_date != now_date:
         last_sent_date = now_date
 
         send_message(CHAT_ID_1, MESSAGE_1)
@@ -54,7 +54,16 @@ def home():
     return "Bot is running!"
 
 if __name__ == "__main__":
-    while True:
-        schedule.run_pending()
-        time.sleep(1)
+    import threading
+    import os
+
+    def run_scheduler():
+        while True:
+            schedule.run_pending()
+            time.sleep(1)
+
+    threading.Thread(target=run_scheduler).start()
+
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port)
 

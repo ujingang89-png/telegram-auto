@@ -29,6 +29,8 @@ def home():
     return "Bot is running!"
 
 threading.Thread(target=run_schedule).start()
+send_message()  # 서버 시작 시 1회 전송
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)
+

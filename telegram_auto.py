@@ -2,7 +2,7 @@ import os
 import requests
 import schedule
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 from flask import Flask
 
 app = Flask(__name__)
@@ -31,21 +31,32 @@ def send_message(chat_id, text, thread_id=None):
     requests.post(url, data=data)
 
 def job():
-    print("메시지 전송:", datetime.now())
+    print("텔레그램 전송!")
 
-    # 일반 방
-    send_message(CHAT_ID_1, MESSAGE_1)
+last_sent_date = None
 
-    send_message(CHAT_ID_2, MESSAGE_2, THREAD_ID_2)
+def job_if_kst_0831():
+    global last_sent_date
 
-schedule.every().day.at("08:28").do(job)
+    kst = datetime.utcnow() + timedelta(hours=9)
+    now_date = kst.strftime("%Y-%m-%d")
+
+    if kst.strftime("%H:%M") == "08:37" and last_sent_date != now_date:
+        last_sent_date = now_date
+
+        job()
+
+        send_message(CHAT_ID_1, MESSAGE_1)
+
+        send_message(CHAT_ID_2, MESSAGE_2, THREAD_ID_2)
+
+schedule.every().minute.do(job_if_kst_0831)
 
 @app.route('/')
 def home():
     return "Bot is running!"
 
 if __name__ == "__main__":
-    
     while True:
         schedule.run_pending()
         time.sleep(1)

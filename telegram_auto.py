@@ -30,27 +30,26 @@ def send_message(chat_id, text, thread_id=None):
 
     requests.post(url, data=data)
 
-def job():
-    print("텔레그램 전송!")
-
 last_sent_date = None
 
-def job_if_kst_0831():
+def job_if_kst_after_0837():
     global last_sent_date
 
     kst = datetime.utcnow() + timedelta(hours=9)
-    now_date = kst.strftime("%Y-%m-%d")
 
-    if kst.strftime("%H:%M") == "08:37" and last_sent_date != now_date:
+    now_date = kst.strftime("%Y-%m-%d")
+    hour = kst.hour
+    minute = kst.minute
+
+    if (hour > 8 or (hour == 8 and minute >= 37)) and last_sent_date != now_date:
         last_sent_date = now_date
 
-        job()
+        print("텔레그램 전송!", kst)
 
         send_message(CHAT_ID_1, MESSAGE_1)
-
         send_message(CHAT_ID_2, MESSAGE_2, THREAD_ID_2)
 
-schedule.every().minute.do(job_if_kst_0831)
+schedule.every().minute.do(job_if_kst_after_0837)
 
 @app.route('/')
 def home():
@@ -60,6 +59,5 @@ if __name__ == "__main__":
     while True:
         schedule.run_pending()
         time.sleep(1)
-
 
 

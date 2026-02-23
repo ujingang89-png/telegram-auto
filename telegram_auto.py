@@ -3,9 +3,10 @@ import schedule
 import time
 from flask import Flask
 import threading
+import os
 
-TOKEN = "8703437303:AAHvITyXQjo8YopZWe9x_xHgO8-0hBFcZvw"
-CHAT_ID = "-1003539680106"
+TOKEN = os.environ.get("BOT_TOKEN")
+CHAT_ID = os.environ.get("CHAT_ID")
 
 def send_message():
     url = f"https://api.telegram.org/bot{TOKEN}/sendMessage"
@@ -28,10 +29,7 @@ app = Flask(__name__)
 def home():
     return "Bot is running!"
 
-threading.Thread(target=run_schedule).start()
-send_message()  # 서버 시작 시 1회 전송
+threading.Thread(target=run_schedule, daemon=True).start()
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=10000)
-
-
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 10000)))

@@ -1,26 +1,34 @@
 import requests
+import schedule
+import time
+from flask import Flask
+import threading
 
-# ====== 설정 ======
 TOKEN = "8703437303:AAHvITyXQjo8YopZWe9x_xHgO8-0hBFcZvw"
 CHAT_ID = "-1003539680106"
-MESSAGE = """일보 부탁드립니다~ 
-1 2 3 4 5 6 7 8"""
-# ==================
 
 def send_message():
     url = f"https://api.telegram.org/bot{TOKEN}/sendMessage"
-    
-    payload = {
+    data = {
         "chat_id": CHAT_ID,
-        "text": MESSAGE
+        "text": "무료 서버에서 자동 메시지 테스트!"
     }
+    requests.post(url, data=data)
 
-    response = requests.post(url, data=payload)
+schedule.every().day.at("09:00").do(send_message)
 
-    if response.status_code == 200:
-        print("메시지 전송 성공")
-    else:
-        print("전송 실패:", response.text)
+def run_schedule():
+    while True:
+        schedule.run_pending()
+        time.sleep(30)
+
+app = Flask(__name__)
+
+@app.route("/")
+def home():
+    return "Bot is running!"
+
+threading.Thread(target=run_schedule).start()
 
 if __name__ == "__main__":
-    send_message()
+    app.run(host="0.0.0.0", port=10000)

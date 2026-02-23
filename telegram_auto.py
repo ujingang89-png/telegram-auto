@@ -38,7 +38,7 @@ def job():
 
     send_message(CHAT_ID_2, MESSAGE_2, THREAD_ID_2)
 
-schedule.every().day.at("12:00").do(job)
+schedule.every(1).minutes.do(job)
 
 @app.route('/')
 def home():
@@ -50,3 +50,4 @@ if __name__ == "__main__":
     while True:
         schedule.run_pending()
         time.sleep(1)
+

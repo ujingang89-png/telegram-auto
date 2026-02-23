@@ -1,35 +1,44 @@
+import os
 import requests
 import schedule
 import time
+from datetime import datetime
 from flask import Flask
-import threading
-import os
-
-TOKEN = os.environ.get("BOT_TOKEN")
-CHAT_ID = os.environ.get("CHAT_ID")
-
-def send_message():
-    url = f"https://api.telegram.org/bot{TOKEN}/sendMessage"
-    data = {
-        "chat_id": CHAT_ID,
-        "text": "무료 서버에서 자동 메시지 테스트!"
-    }
-    requests.post(url, data=data)
-
-schedule.every().day.at("12:00").do(send_message)
-
-def run_schedule():
-    while True:
-        schedule.run_pending()
-        time.sleep(30)
 
 app = Flask(__name__)
 
-@app.route("/")
+BOT_TOKEN = os.environ.get("BOT_TOKEN")
+
+CHAT_ID_1 = "-1003539680106"
+MESSAGE_1 = """일보 부탁드립니다~
+1 2 3 4 5 6 7 8"""
+
+CHAT_ID_2 = "-1002467111151"
+MESSAGE_2 = "1 2 3 4 5 6 7 8"
+
+def send_message(chat_id, text):
+    url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
+    data = {
+        "chat_id": chat_id,
+        "text": text
+    }
+    requests.post(url, data=data)
+
+def job():
+    print("메시지 전송:", datetime.now())
+
+    send_message(CHAT_ID_1, MESSAGE_1)
+    send_message(CHAT_ID_2, MESSAGE_2)
+
+schedule.every().day.at("12:00").do(job)
+
+@app.route('/')
 def home():
     return "Bot is running!"
 
-threading.Thread(target=run_schedule, daemon=True).start()
-
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 10000)))
+    job()  # 서버 시작하자마자 1번 전송 (테스트용)
+
+    while True:
+        schedule.run_pending()
+        time.sleep(1)

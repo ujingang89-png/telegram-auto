@@ -38,17 +38,17 @@ def job():
 
     send_message(CHAT_ID_2, MESSAGE_2, THREAD_ID_2)
 
-schedule.every().day.at("21:00").do(job)
+schedule.every().day.at("08:28").do(job)
 
 @app.route('/')
 def home():
     return "Bot is running!"
 
 if __name__ == "__main__":
-    job()  # 서버 시작 테스트용 (나중에 지워도 됨)
-
+    
     while True:
         schedule.run_pending()
         time.sleep(1)
+
 
 

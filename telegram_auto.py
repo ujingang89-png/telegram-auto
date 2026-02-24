@@ -20,6 +20,7 @@ MESSAGE_2 = "1 2 3 4 5 6 7 8"
 
 THREAD_ID_2 = 30
 
+
 def send_message(chat_id, text, thread_id=None):
     url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
     data = {
@@ -34,6 +35,7 @@ def send_message(chat_id, text, thread_id=None):
 
 
 last_sent_date = None
+
 
 def job_if_kst():
     global last_sent_date
@@ -65,7 +67,7 @@ def run_scheduler():
 
 
 if __name__ == "__main__":
-    threading.Thread(target=run_scheduler).start()
+    threading.Thread(target=run_scheduler, daemon=True).start()
 
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)

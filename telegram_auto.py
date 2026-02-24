@@ -32,7 +32,7 @@ def send_message(chat_id, text, thread_id=None):
 
 last_sent_date = None
 
-def job_if_kst_2100():
+def job_if_kst_0903():
     global last_sent_date
 
     kst = datetime.utcnow() + timedelta(hours=9)
@@ -41,13 +41,13 @@ def job_if_kst_2100():
 
     now_date = kst.strftime("%Y-%m-%d")
 
-   if kst.strftime("%H:%M") in ["21:00", "21:01", "21:02", "21:05"] and last_sent_date != now_date:
+     if kst.strftime("%H:%M") in ["09:03", "09:04", "09:05", "09:06"] and last_sent_date != now_date:
         last_sent_date = now_date
 
         send_message(CHAT_ID_1, MESSAGE_1)
         send_message(CHAT_ID_2, MESSAGE_2, THREAD_ID_2)
 
-schedule.every().minute.do(job_if_kst_2100)
+schedule.every().minute.do(job_if_kst_0903)
 
 @app.route('/')
 def home():
@@ -55,7 +55,6 @@ def home():
 
 if __name__ == "__main__":
     import threading
-    import os
 
     def run_scheduler():
         while True:
@@ -66,4 +65,5 @@ if __name__ == "__main__":
 
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
+
 

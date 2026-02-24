@@ -2,8 +2,10 @@ import os
 import requests
 import schedule
 import time
-from datetime import datetime, timedelta
+from datetime import datetime
+import pytz
 from flask import Flask
+import threading
 
 app = Flask(__name__)
 
@@ -30,40 +32,40 @@ def send_message(chat_id, text, thread_id=None):
 
     requests.post(url, data=data)
 
+
 last_sent_date = None
 
-def job_if_kst_0903():
+def job_if_kst():
     global last_sent_date
 
-    kst = datetime.utcnow() + timedelta(hours=9)
-
+    kst = datetime.now(pytz.timezone("Asia/Seoul"))
     print("현재 KST:", kst)
 
     now_date = kst.strftime("%Y-%m-%d")
 
-     if kst.strftime("%H:%M") in ["09:03", "09:04", "09:05", "09:06"] and last_sent_date != now_date:
+    if kst.strftime("%H:%M") in ["09:03", "09:04", "09:05"] and last_sent_date != now_date:
         last_sent_date = now_date
 
         send_message(CHAT_ID_1, MESSAGE_1)
         send_message(CHAT_ID_2, MESSAGE_2, THREAD_ID_2)
 
-schedule.every().minute.do(job_if_kst_0903)
+
+schedule.every().minute.do(job_if_kst)
+
 
 @app.route('/')
 def home():
     return "Bot is running!"
 
+
+def run_scheduler():
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
+
+
 if __name__ == "__main__":
-    import threading
-
-    def run_scheduler():
-        while True:
-            schedule.run_pending()
-            time.sleep(1)
-
     threading.Thread(target=run_scheduler).start()
 
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
-
-

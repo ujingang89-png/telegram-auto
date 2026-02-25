@@ -45,7 +45,7 @@ def job_if_kst():
 
     now_date = kst.strftime("%Y-%m-%d")
 
-    if kst.strftime("%H:%M") in ["09:03", "09:04", "09:05"] and last_sent_date != now_date:
+    if kst.strftime("%H:%M") in ["20:30", "20:31", "20:32"] and last_sent_date != now_date:
         last_sent_date = now_date
 
         send_message(CHAT_ID_1, MESSAGE_1)
@@ -71,3 +71,4 @@ if __name__ == "__main__":
 
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
+

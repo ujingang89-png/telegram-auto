@@ -28,8 +28,8 @@ MESSAGE_3 = """주일 19시 전팀모임양식
 CHAT_ID_4 = "-1002244734007"
 MESSAGE_4 = "파트별 금주 논의사항 양식 올려주세요~!"
 
-CHAT_ID_4 = "-1002244734007"
-MESSAGE_4 = "주간회의 PPT 마무리해주세요~!"
+CHAT_ID_5 = "-1002244734007"
+MESSAGE_5 = "주간회의 PPT 마무리해주세요~!"
 
 def send_message(chat_id, text, thread_id=None):
     url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
@@ -87,7 +87,7 @@ def job_thursday_2300():
 
     if (
         kst.weekday() == 3 and
-        kst.strftime("%H:%M") in ["23:00", "23:01", "23:02"] and
+        kst.strftime("%H:%M") in ["23:35", "23:36", "23:37"] and
         last_sent_date_thu != now_date
     ):
         last_sent_date_thu = now_date
@@ -102,7 +102,7 @@ def job_wednesday_2300():
     now_date = kst.strftime("%Y-%m-%d")
 
     if (
-        kst.weekday() == 2 and  # 수요일
+        kst.weekday() == 2 and
         kst.strftime("%H:%M") in ["23:00", "23:01", "23:02"] and
         last_sent_date_wed != now_date
     ):
@@ -111,7 +111,7 @@ def job_wednesday_2300():
 
 schedule.every().minute.do(job_if_kst)
 schedule.every().minute.do(job_saturday_2130)
-schedule.every().minute.do(job_thursday_2300)
+schedule.every().minute.do(job_thursday_2335)
 schedule.every().minute.do(job_wednesday_2300)
 
 @app.route('/')
@@ -130,6 +130,7 @@ if __name__ == "__main__":
 
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
+
 
 
 

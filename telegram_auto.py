@@ -43,9 +43,7 @@ def send_message(chat_id, text, thread_id=None):
 
     requests.post(url, data=data)
 
-
 last_sent_date = None
-
 
 def job_if_kst():
     global last_sent_date
@@ -76,21 +74,21 @@ def job_saturday_2130():
     ):
         last_sent_date_sat = now_date
         send_message(CHAT_ID_3, MESSAGE_3, THREAD_ID_3)
+        
+last_sent_date_fri = None
 
-last_sent_date_thu = None
-
-def job_thursday_2300():
-    global last_sent_date_thu
+def job_friday_0050():
+    global last_sent_date_fri
 
     kst = datetime.now(pytz.timezone("Asia/Seoul"))
     now_date = kst.strftime("%Y-%m-%d")
 
     if (
-        kst.weekday() == 3 and
-        kst.strftime("%H:%M") in ["23:35", "23:36", "23:37"] and
-        last_sent_date_thu != now_date
+        kst.weekday() == 4 and
+        kst.strftime("%H:%M") in ["00:50", "00:51", "00:52"] and
+        last_sent_date_fri != now_date
     ):
-        last_sent_date_thu = now_date
+        last_sent_date_fri = now_date
         send_message(CHAT_ID_4, MESSAGE_4)
 
 last_sent_date_wed = None
@@ -111,7 +109,7 @@ def job_wednesday_2300():
 
 schedule.every().minute.do(job_if_kst)
 schedule.every().minute.do(job_saturday_2130)
-schedule.every().minute.do(job_thursday_2335)
+schedule.every().minute.do(job_friday_0050)
 schedule.every().minute.do(job_wednesday_2300)
 
 @app.route('/')
@@ -130,6 +128,7 @@ if __name__ == "__main__":
 
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
+
 
 
 

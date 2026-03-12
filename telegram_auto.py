@@ -25,6 +25,12 @@ THREAD_ID_3 = 6
 MESSAGE_3 = """주일 19시 전팀모임양식
 올려주시면 감사하겠습니다!"""
 
+CHAT_ID_4 = "-1002244734007"
+MESSAGE_4 = "파트별 금주 논의사항 양식 올려주세요~!"
+
+CHAT_ID_4 = "-1002244734007"
+MESSAGE_4 = "주간회의 PPT 마무리해주세요~!"
+
 def send_message(chat_id, text, thread_id=None):
     url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
     data = {
@@ -71,8 +77,42 @@ def job_saturday_2130():
         last_sent_date_sat = now_date
         send_message(CHAT_ID_3, MESSAGE_3, THREAD_ID_3)
 
+last_sent_date_thu = None
+
+def job_thursday_2300():
+    global last_sent_date_thu
+
+    kst = datetime.now(pytz.timezone("Asia/Seoul"))
+    now_date = kst.strftime("%Y-%m-%d")
+
+    if (
+        kst.weekday() == 3 and
+        kst.strftime("%H:%M") in ["23:00", "23:01", "23:02"] and
+        last_sent_date_thu != now_date
+    ):
+        last_sent_date_thu = now_date
+        send_message(CHAT_ID_4, MESSAGE_4)
+
+last_sent_date_wed = None
+
+def job_wednesday_2300():
+    global last_sent_date_wed
+
+    kst = datetime.now(pytz.timezone("Asia/Seoul"))
+    now_date = kst.strftime("%Y-%m-%d")
+
+    if (
+        kst.weekday() == 2 and  # 수요일
+        kst.strftime("%H:%M") in ["23:00", "23:01", "23:02"] and
+        last_sent_date_wed != now_date
+    ):
+        last_sent_date_wed = now_date
+        send_message(CHAT_ID_5, MESSAGE_5)
+
 schedule.every().minute.do(job_if_kst)
 schedule.every().minute.do(job_saturday_2130)
+schedule.every().minute.do(job_thursday_2300)
+schedule.every().minute.do(job_wednesday_2300)
 
 @app.route('/')
 def home():
@@ -90,5 +130,6 @@ if __name__ == "__main__":
 
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
+
 
 

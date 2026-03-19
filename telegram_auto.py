@@ -75,20 +75,20 @@ def job_saturday_2130():
         last_sent_date_sat = now_date
         send_message(CHAT_ID_3, MESSAGE_3, THREAD_ID_3)
         
-last_sent_date_fri = None
+last_sent_date_thu = None
 
-def job_friday_0050():
-    global last_sent_date_fri
+def job_thursday_2300():
+    global last_sent_date_thu
 
     kst = datetime.now(pytz.timezone("Asia/Seoul"))
     now_date = kst.strftime("%Y-%m-%d")
 
     if (
-        kst.weekday() == 4 and
-        kst.strftime("%H:%M") in ["00:50", "00:51", "00:52"] and
-        last_sent_date_fri != now_date
+        kst.weekday() == 3 and
+        kst.strftime("%H:%M") in ["23:00", "23:01", "23:02"] and
+        last_sent_date_thu != now_date
     ):
-        last_sent_date_fri = now_date
+        last_sent_date_thu = now_date
         send_message(CHAT_ID_4, MESSAGE_4)
 
 last_sent_date_wed = None
@@ -109,7 +109,7 @@ def job_wednesday_2300():
 
 schedule.every().minute.do(job_if_kst)
 schedule.every().minute.do(job_saturday_2130)
-schedule.every().minute.do(job_friday_0050)
+schedule.every().minute.do(job_thursday_2300)
 schedule.every().minute.do(job_wednesday_2300)
 
 @app.route('/')

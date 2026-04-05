@@ -52,6 +52,13 @@ MSG_SAT_FEEL = """토요일까지 모두 완료해주세요!
 사유보고는 당일이 아닌, 미리 하는것이 사유보고입니다.
 당일에 사유보고 하신분들은 사유보고로 받지 않겠습니다."""
 
+CHAT_ID_WORSHIP = "-1002058115709"
+MSG_MON_WORSHIP = "구역예배 시간 올려주세요"
+MSG_TUE_WORSHIP = "구역예배 시간 올려주세요! 구역예배 교안은 금요일 오전 8시까지입니다. 8:01분이 될시에도 벌금입니다!"
+MSG_WED_WORSHIP = "구역예배 교안은 금요일 오전 8시까지입니다. 8:01분이 될시에도 벌금입니다!"
+MSG_THU_WORSHIP = "구역예배 교안은 금요일 오전 8시까지입니다. 8:01분이 될시에도 벌금입니다!"
+MSG_FRI_WORSHIP = "구역예배 교안 시간이 얼마 남지 않았습니다. 8:01분 되면 벌금입니다!"
+
 def send_message(chat_id, text, thread_id=None):
     url = f"https://api.telegram.org/bot8703437303:AAEsfMv3-HjuRZfU7VRAxMvlYm-9ML4IOdc/sendMessage"
     data = {"chat_id": chat_id, "text": text}
@@ -226,6 +233,57 @@ def job_feel_saturday():
             last_sent_feel_sat = now_date
             send_message(CHAT_ID_FEEL, MSG_SAT_FEEL)
 
+last_sent_worship_mon = None
+def job_worship_monday():
+    global last_sent_worship_mon
+    kst = datetime.now(pytz.timezone("Asia/Seoul"))
+    if kst.weekday() == 0:  # 월요일
+        now_date = kst.strftime("%Y-%m-%d")
+        if kst.strftime("%H:%M") in ["10:00", "20:00"] and last_sent_worship_mon != now_date:
+            last_sent_worship_mon = now_date
+            send_message(CHAT_ID_WORSHIP, MSG_MON_WORSHIP)
+
+last_sent_worship_tue = None
+def job_worship_tuesday():
+    global last_sent_worship_tue
+    kst = datetime.now(pytz.timezone("Asia/Seoul"))
+    if kst.weekday() == 1:  # 화요일
+        now_date = kst.strftime("%Y-%m-%d")
+        if kst.strftime("%H:%M") in ["11:00", "20:00"] and last_sent_worship_tue != now_date:
+            last_sent_worship_tue = now_date
+            send_message(CHAT_ID_WORSHIP, MSG_TUE_WORSHIP)
+
+last_sent_worship_wed = None
+def job_worship_wednesday():
+    global last_sent_worship_wed
+    kst = datetime.now(pytz.timezone("Asia/Seoul"))
+    if kst.weekday() == 2:  # 수요일
+        now_date = kst.strftime("%Y-%m-%d")
+        if kst.strftime("%H:%M") in ["10:00", "18:00"] and last_sent_worship_wed != now_date:
+            last_sent_worship_wed = now_date
+            send_message(CHAT_ID_WORSHIP, MSG_WED_WORSHIP)
+
+last_sent_worship_thu = None
+def job_worship_thursday():
+    global last_sent_worship_thu
+    kst = datetime.now(pytz.timezone("Asia/Seoul"))
+    if kst.weekday() == 3:  # 목요일
+        now_date = kst.strftime("%Y-%m-%d")
+
+        if kst.strftime("%H:%M") in ["10:00", "20:00", "23:00", "00:00"] and last_sent_worship_thu != now_date:
+            last_sent_worship_thu = now_date
+            send_message(CHAT_ID_WORSHIP, MSG_THU_WORSHIP)
+
+last_sent_worship_fri = None
+def job_worship_friday():
+    global last_sent_worship_fri
+    kst = datetime.now(pytz.timezone("Asia/Seoul"))
+    if kst.weekday() == 4:  # 금요일
+        now_date = kst.strftime("%Y-%m-%d")
+        if kst.strftime("%H:%M") in ["05:00", "06:00", "07:00"] and last_sent_worship_fri != now_date:
+            last_sent_worship_fri = now_date
+            send_message(CHAT_ID_WORSHIP, MSG_FRI_WORSHIP)
+
 
 
 schedule.every().minute.do(job_if_kst)
@@ -244,6 +302,12 @@ schedule.every().minute.do(job_feel_wednesday)
 schedule.every().minute.do(job_feel_thursday)
 schedule.every().minute.do(job_feel_friday)
 schedule.every().minute.do(job_feel_saturday)
+
+schedule.every().minute.do(job_worship_monday)
+schedule.every().minute.do(job_worship_tuesday)
+schedule.every().minute.do(job_worship_wednesday)
+schedule.every().minute.do(job_worship_thursday)
+schedule.every().minute.do(job_worship_friday)
 
 
 @app.route('/')

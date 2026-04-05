@@ -38,6 +38,20 @@ MSG_TUE = "진성신은 목요일 주간회의 전까지입니다."
 MSG_WED = "진성신은 목요일까지입니다, 주간회의 전까지 입니다."
 MSG_THU = "당일에 주시는 사유보고는 받지 않겠습니다. 주간회의 전까지 모두 마무리 부탁드립니다."
 
+# 느낀점 방
+CHAT_ID_FEEL = "-1002697448961"
+
+MSG_MON_FEEL = "교육 들으신 분들은 느낀점 마무리 해주시고 수정해주세요"
+MSG_TUE_FEEL = "교육 들으신 분들은 느낀점 마무리 해주시고 수정해주세요"
+MSG_WED_FEEL = "청취 요일 수정과 느낀점 마무리 해주세요. 토요일까지입니다!"
+MSG_THU_FEEL = "토요일까지입니다. 모두 시간 맞춰 청취 부탁드립니다. 요일 수정해주세요"
+MSG_FRI_FEEL = "교육과 주간회의는 모두 토요일까지입니다. 모두 시간 맞춰 청취 부탁드립니다. 요일 수정해주세요"
+MSG_SAT_FEEL = """토요일까지 모두 완료해주세요!
+오늘까지 마무리 부탁드립니다.
+일요일까지도 이름 남아있는 사명자는 사유 물어보겠습니다.
+사유보고는 당일이 아닌, 미리 하는것이 사유보고입니다.
+당일에 사유보고 하신분들은 사유보고로 받지 않겠습니다."""
+
 def send_message(chat_id, text, thread_id=None):
     url = f"https://api.telegram.org/bot8703437303:AAEsfMv3-HjuRZfU7VRAxMvlYm-9ML4IOdc/sendMessage"
     data = {"chat_id": chat_id, "text": text}
@@ -147,7 +161,70 @@ def job_thursday():
         last_sent_thu = now_date
         send_message(CHAT_ID_JS, MSG_THU)
 
+last_sent_feel_mon = None
+def job_feel_monday():
+    global last_sent_feel_mon
+    kst = datetime.now(pytz.timezone("Asia/Seoul"))
+    if kst.weekday() == 0:  # 월요일
+        now_date = kst.strftime("%Y-%m-%d")
+        if kst.strftime("%H:%M") == "21:00" and last_sent_feel_mon != now_date:
+            last_sent_feel_mon = now_date
+            send_message(CHAT_ID_FEEL, MSG_MON_FEEL)
 
+
+last_sent_feel_tue = None
+def job_feel_tuesday():
+    global last_sent_feel_tue
+    kst = datetime.now(pytz.timezone("Asia/Seoul"))
+    if kst.weekday() == 1:  # 화요일
+        now_date = kst.strftime("%Y-%m-%d")
+        if kst.strftime("%H:%M") in ["10:00", "18:00"] and last_sent_feel_tue != now_date:
+            last_sent_feel_tue = now_date
+            send_message(CHAT_ID_FEEL, MSG_TUE_FEEL)
+
+
+last_sent_feel_wed = None
+def job_feel_wednesday():
+    global last_sent_feel_wed
+    kst = datetime.now(pytz.timezone("Asia/Seoul"))
+    if kst.weekday() == 2:  # 수요일
+        now_date = kst.strftime("%Y-%m-%d")
+        if kst.strftime("%H:%M") in ["10:00", "18:00"] and last_sent_feel_wed != now_date:
+            last_sent_feel_wed = now_date
+            send_message(CHAT_ID_FEEL, MSG_WED_FEEL)
+
+
+last_sent_feel_thu = None
+def job_feel_thursday():
+    global last_sent_feel_thu
+    kst = datetime.now(pytz.timezone("Asia/Seoul"))
+    if kst.weekday() == 3:  # 목요일
+        now_date = kst.strftime("%Y-%m-%d")
+        if kst.strftime("%H:%M") in ["10:00", "18:00"] and last_sent_feel_thu != now_date:
+            last_sent_feel_thu = now_date
+            send_message(CHAT_ID_FEEL, MSG_THU_FEEL)
+
+
+last_sent_feel_fri = None
+def job_feel_friday():
+    global last_sent_feel_fri
+    kst = datetime.now(pytz.timezone("Asia/Seoul"))
+    if kst.weekday() == 4:  # 금요일
+        now_date = kst.strftime("%Y-%m-%d")
+        if kst.strftime("%H:%M") in ["10:00", "18:00"] and last_sent_feel_fri != now_date:
+            last_sent_feel_fri = now_date
+            send_message(CHAT_ID_FEEL, MSG_FRI_FEEL)
+
+
+last_sent_feel_sat = None
+def job_feel_saturday():
+    global last_sent_feel_sat
+    kst = datetime.now(pytz.timezone("Asia/Seoul"))
+    if kst.weekday() == 5:  # 토요일
+        now_date = kst.strftime("%Y-%m-%d")
+        if kst.strftime("%H:%M") in ["10:00", "15:00", "19:00", "21:00", "23:00"] and last_sent_feel_sat != now_date:
+            last_sent_feel_sat = now_date
+            send_message(CHAT_ID_FEEL, MSG_SAT_FEEL)
 
 
 
@@ -160,6 +237,13 @@ schedule.every().minute.do(job_monday_10)
 schedule.every().minute.do(job_tuesday)
 schedule.every().minute.do(job_wednesday)
 schedule.every().minute.do(job_thursday)
+
+schedule.every().minute.do(job_feel_monday)
+schedule.every().minute.do(job_feel_tuesday)
+schedule.every().minute.do(job_feel_wednesday)
+schedule.every().minute.do(job_feel_thursday)
+schedule.every().minute.do(job_feel_friday)
+schedule.every().minute.do(job_feel_saturday)
 
 
 @app.route('/')

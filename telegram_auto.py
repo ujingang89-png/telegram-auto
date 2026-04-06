@@ -271,7 +271,7 @@ def job_worship_thursday():
     if kst.weekday() == 3:  # 목요일
         now_date = kst.strftime("%Y-%m-%d")
 
-        if kst.strftime("%H:%M") in ["10:00", "20:00", "23:00", "00:00"] and last_sent_worship_thu != now_date:
+        if kst.strftime("%H:%M") in ["10:00", "20:00", "23:00", "23:58"] and last_sent_worship_thu != now_date:
             last_sent_worship_thu = now_date
             send_message(CHAT_ID_WORSHIP, MSG_THU_WORSHIP)
 

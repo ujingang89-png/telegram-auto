@@ -60,7 +60,8 @@ MSG_THU_WORSHIP = "구역예배 교안은 금요일 오전 8시까지입니다. 
 MSG_FRI_WORSHIP = "구역예배 교안 시간이 얼마 남지 않았습니다. 8:01분 되면 벌금입니다!"
 
 def send_message(chat_id, text, thread_id=None):
-    url = f"https://api.telegram.org/bot8703437303:AAEsfMv3-HjuRZfU7VRAxMvlYm-9ML4IOdc/sendMessage"
+    BOT_TOKEN = os.environ.get("BOT_TOKEN")
+url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
     data = {"chat_id": chat_id, "text": text}
 
     if thread_id is not None:
